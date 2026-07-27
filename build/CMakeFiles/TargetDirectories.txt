@@ -1,0 +1,3 @@
+/Users/nolanschirripa/Desktop/celluarAutomataSim/build/CMakeFiles/celluarAutomataSim.dir
+/Users/nolanschirripa/Desktop/celluarAutomataSim/build/CMakeFiles/edit_cache.dir
+/Users/nolanschirripa/Desktop/celluarAutomataSim/build/CMakeFiles/rebuild_cache.dir
