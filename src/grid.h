@@ -3,7 +3,7 @@
 
 #include "cell.h"
 #include <vector>
-#include "constants.h"
+#include <iostream>
 using namespace std;
 
 
@@ -23,7 +23,11 @@ class Grid {
         Cell& getCell(int row, int col);
         void setCell(int row, int col, Cell& cell);
         void drawCell(int row, int col, sf::RenderWindow& window);
+        int getNeighbors(int row, int col);
         void drawGrid(sf::RenderWindow& window);
+        void conwayRule(int row, int col);
+        void playGame();
+        void drawByMouse(sf::RenderWindow& window);
 };
 
 

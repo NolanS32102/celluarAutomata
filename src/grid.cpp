@@ -32,10 +32,70 @@ void Grid::drawCell(int row, int col, sf::RenderWindow& window) {
     
 }
 
-void Grid::drawGrid(sf::RenderWindow& window) {
-    for (auto section : board) {
-        for (auto cell : section) {
-            
+int Grid::getNeighbors(int row, int col) {
+    int neighbors = 0;
+    for (int dr = -1; dr <= 1; dr++){
+        for (int dc = -1; dc <= 1; dc++) {
+            if (dr == 0 && dc == 0) {
+                continue;
+            }
+            int newRow = row + dr;
+            int newCol = col + dc;
+            if (newRow < board.size() && newCol < board[0].size()) {
+                if (board[newRow][newCol].getIsALive()) {
+                    neighbors++;
+                }
+            }
         }
+    }
+    return neighbors;
+}
+
+void Grid::drawGrid(sf::RenderWindow& window) {
+    for (int r = 0; r < board.size(); r++) {
+        for (int c = 0; c < board[r].size(); c++) {
+            drawCell(r, c, window);
+        }
+    } 
+}
+
+void Grid::conwayRule(int row, int col) {
+    int neighbors = getNeighbors(row, col);
+    if (board[row][col].getIsALive()) {
+        if (neighbors <= 1 || neighbors >= 4) {
+            board[row][col].setIsAlive(false);
+            cout << "Cell DIED!" << endl;
+        } 
+    } else if (neighbors >= 3){
+        board[row][col].setIsAlive(true);
+        cout << "Cell SPAWNED!" << endl;
+    }
+}
+
+void Grid::playGame() {
+    for (int r = 0; r < board.size(); r++) {
+        for (int c = 0; c < board[r].size(); c++) {
+            switch (mode)
+            {
+            case CONWAY_GAME:
+                conwayRule(r, c);
+                break;
+            
+            default:
+                break;
+            }
+        }
+    }
+}
+
+void Grid::drawByMouse(sf::RenderWindow& window) {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+        cout << "mouse clicked!!!!" << endl;
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        
+        int col = mousePos.x / CELL_SIZE;
+        int row = mousePos.y / CELL_SIZE;
+
+        board[row][col].setIsAlive(true);
     }
 }
