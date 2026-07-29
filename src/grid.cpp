@@ -4,6 +4,7 @@ Grid::Grid() {
     int rows = WINDOW_HEIGHT / CELL_SIZE;
     int cols = WINDOW_WIDTH / CELL_SIZE; 
     board.resize(rows, std::vector<Cell>(cols, Cell(false)));
+    nextBoard.resize(rows, std::vector<Cell>(cols, Cell(false)));
     mode = CONWAY_GAME;
 }
 
@@ -42,7 +43,7 @@ int Grid::getNeighbors(int row, int col) {
             int newRow = row + dr;
             int newCol = col + dc;
             if (newRow < board.size() && newCol < board[0].size()) {
-                if (board[newRow][newCol].getIsALive()) {
+                if (board[newRow][newCol].getIsAlive()) {
                     neighbors++;
                 }
             }
@@ -61,31 +62,32 @@ void Grid::drawGrid(sf::RenderWindow& window) {
 
 void Grid::conwayRule(int row, int col) {
     int neighbors = getNeighbors(row, col);
-    if (board[row][col].getIsALive()) {
-        if (neighbors <= 1 || neighbors >= 4) {
-            board[row][col].setIsAlive(false);
-            cout << "Cell DIED!" << endl;
-        } 
-    } else if (neighbors >= 3){
-        board[row][col].setIsAlive(true);
-        cout << "Cell SPAWNED!" << endl;
+    bool currentlyAlive = board[row][col].getIsAlive();
+
+    if (currentlyAlive) {
+        nextBoard[row][col].setIsAlive(
+            neighbors == 2 || neighbors == 3
+        );
+    }
+    else {
+        nextBoard[row][col].setIsAlive(neighbors == 3);
     }
 }
 
 void Grid::playGame() {
     for (int r = 0; r < board.size(); r++) {
         for (int c = 0; c < board[r].size(); c++) {
-            switch (mode)
-            {
-            case CONWAY_GAME:
-                conwayRule(r, c);
-                break;
-            
-            default:
-                break;
+            switch (mode) {
+                case CONWAY_GAME:
+                    conwayRule(r, c);
+                    break;
+                
+                default:
+                    break;
             }
         }
     }
+    board.swap(nextBoard);
 }
 
 void Grid::drawByMouse(sf::RenderWindow& window) {

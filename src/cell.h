@@ -12,7 +12,7 @@ class Cell {
     public:
         Cell() : isAlive(true) {};
         Cell(bool status) : isAlive(status){}
-        bool getIsALive() { return isAlive; }
+        bool getIsAlive() { return isAlive; }
         void setIsAlive(bool isALive) { this->isAlive = isALive; }
         void drawCell(sf::RenderWindow& window, auto xPos, auto yPos) {
             sf::Color color = isAlive ? sf::Color::Yellow : sf::Color::Black;

@@ -15,6 +15,7 @@ enum GameType {
 class Grid {
     private:
         vector<vector<Cell>> board;
+        vector<vector<Cell>> nextBoard;
         GameType mode;
     
     public:
