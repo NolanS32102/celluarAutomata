@@ -9,6 +9,7 @@ using namespace std;
 
 enum GameType {
     CONWAY_GAME,
+    HIGH_LIFE,
     STARWARS
 };
 
@@ -27,6 +28,7 @@ class Grid {
         int getNeighbors(int row, int col);
         void drawGrid(sf::RenderWindow& window);
         void conwayRule(int row, int col);
+        void highLifeRule(int row, int col);
         void playGame();
         void drawByMouse(sf::RenderWindow& window);
 };

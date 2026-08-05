@@ -74,12 +74,30 @@ void Grid::conwayRule(int row, int col) {
     }
 }
 
+// Live cells survive with 2 or 3, dead cells become alive with exactly 2 neighbors
+void Grid::highLifeRule(int row, int col) {
+    int neighbors = getNeighbors(row, col);
+    bool currentlyAlive = board[row][col].getIsAlive();
+
+    if (currentlyAlive) {
+        nextBoard[row][col].setIsAlive(
+            neighbors == 2 || neighbors == 3
+        );
+    }
+    else {
+        nextBoard[row][col].setIsAlive(neighbors == 3 || neighbors == 6);
+    } 
+}
+
 void Grid::playGame() {
     for (int r = 0; r < board.size(); r++) {
         for (int c = 0; c < board[r].size(); c++) {
             switch (mode) {
                 case CONWAY_GAME:
                     conwayRule(r, c);
+                    break;
+                case HIGH_LIFE:
+                    highLifeRule(r, c);
                     break;
                 
                 default:
@@ -90,14 +108,21 @@ void Grid::playGame() {
     board.swap(nextBoard);
 }
 
-void Grid::drawByMouse(sf::RenderWindow& window) {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-        cout << "mouse clicked!!!!" << endl;
+void Grid::drawByMouse(sf::RenderWindow& window)
+{
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+    {
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-        
+
         int col = mousePos.x / CELL_SIZE;
         int row = mousePos.y / CELL_SIZE;
 
-        board[row][col].setIsAlive(true);
+        if (row >= 0 &&
+            col >= 0 &&
+            row < static_cast<int>(board.size()) &&
+            col < static_cast<int>(board[row].size()))
+        {
+            board[row][col].setIsAlive(true);
+        }
     }
 }

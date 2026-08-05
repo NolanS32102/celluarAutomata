@@ -7,7 +7,7 @@ int main() {
     sf::Clock clock;
 
 
-    Grid grid; 
+    Grid grid(HIGH_LIFE); 
     // grid.getCell(10, 10).setIsAlive(true);
     // grid.getCell(10, 11).setIsAlive(true);
     // grid.getCell(11, 11).setIsAlive(true);
