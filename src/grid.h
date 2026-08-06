@@ -30,6 +30,7 @@ class Grid {
         void conwayRule(int row, int col);
         void highLifeRule(int row, int col);
         void playGame();
+        void randomize(float aliveProbability = 0.25f);
         void drawByMouse(sf::RenderWindow& window);
 };
 

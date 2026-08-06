@@ -1,4 +1,6 @@
 #include "grid.h"
+#include "macos_window.h"
+#include <random>
 
 Grid::Grid() {
     int rows = WINDOW_HEIGHT / CELL_SIZE;
@@ -42,7 +44,9 @@ int Grid::getNeighbors(int row, int col) {
             }
             int newRow = row + dr;
             int newCol = col + dc;
-            if (newRow < board.size() && newCol < board[0].size()) {
+            if (newRow >= 0 && newCol >= 0 &&
+                newRow < static_cast<int>(board.size()) &&
+                newCol < static_cast<int>(board[0].size())) {
                 if (board[newRow][newCol].getIsAlive()) {
                     neighbors++;
                 }
@@ -108,14 +112,35 @@ void Grid::playGame() {
     board.swap(nextBoard);
 }
 
+void Grid::randomize(float aliveProbability)
+{
+    std::random_device randomDevice;
+    std::mt19937 generator(randomDevice());
+    std::bernoulli_distribution isAlive(aliveProbability);
+
+    for (auto& row : board) {
+        for (auto& cell : row) {
+            cell.setIsAlive(isAlive(generator));
+        }
+    }
+}
+
 void Grid::drawByMouse(sf::RenderWindow& window)
 {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
     {
-        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        const sf::Vector2f normalizedMouse =
+            getNormalizedMousePosition(window.getNativeHandle());
+        if (normalizedMouse.x < 0.f || normalizedMouse.y < 0.f) {
+            return;
+        }
 
-        int col = mousePos.x / CELL_SIZE;
-        int row = mousePos.y / CELL_SIZE;
+        const sf::Vector2f mousePos = {
+            normalizedMouse.x * static_cast<float>(WINDOW_WIDTH),
+            normalizedMouse.y * static_cast<float>(WINDOW_HEIGHT)};
+
+        int col = static_cast<int>(mousePos.x / CELL_SIZE);
+        int row = static_cast<int>(mousePos.y / CELL_SIZE);
 
         if (row >= 0 &&
             col >= 0 &&
